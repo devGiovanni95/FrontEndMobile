@@ -48,7 +48,8 @@ export class CategoriasPage {
         },
         //quando a requisicao da algum erro
         error => {
-            console.log(error);
+           // console.log(error); mostra o erro no console
+           //---> delegar esta funcao para a classe de interceptador de errors
         }
         );
 

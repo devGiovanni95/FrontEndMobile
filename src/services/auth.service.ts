@@ -4,10 +4,14 @@ import { HttpClient } from '@angular/common/http';
 import { CredenciaisDTO } from '../models/credenciais.dto';
 import { StorageService } from './storage.service';
 import { LocalUser } from '../models/local_user';
+import { JwtHelper } from 'angular2-jwt';
 
 
 @Injectable()
 export class AuthService{
+
+  /**classe para decodificar o token */
+  jwtHelper: JwtHelper = new JwtHelper();
 
   // construtor para acessar uma requisição http
   constructor(public http: HttpClient, public storage: StorageService){
@@ -29,7 +33,9 @@ export class AuthService{
    successfulLogin(authorizationValue : string) {
     let tok = authorizationValue.substring(7);//comeca a partir da 7 letra
     let user : LocalUser = {
-      token: tok
+      token: tok,
+      email: this.jwtHelper.decodeToken(tok).sub
+
     };
     this.storage.setLocalUser(user);
 

@@ -35,7 +35,8 @@ ionViewDidLeave(){
   login(){
     this.auth.authenticate(this.creds)
     .subscribe(response => {/*Subscrever para receber uma resposta*/
-      console.log(response.headers.get('Authorization'));/*Se passar pela verificacao imprima a autorização*/
+     // console.log(response.headers.get('Authorization'));/*Se passar pela verificacao imprima a autorização*/
+      this.auth.successfulLogin(response.headers.get('Authorization'));/*Se passar pela verificacao imprima a autorização*/
     this.navCtrl.setRoot('CategoriasPage')/**Va para a proxima pasta sobrepondo */
     },
       error => {});/**se der erro nao faca nada */

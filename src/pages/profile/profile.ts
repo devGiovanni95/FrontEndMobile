@@ -1,3 +1,4 @@
+import { API_CONFIG } from './../../config/api.config';
 import { ClienteService } from './../../services/domain/cliente.service';
 import { StorageService } from './../../services/storage.service';
 import { LocalUser } from './../../models/local_user';
@@ -36,9 +37,18 @@ export class ProfilePage {
      this.clienteService.findByEmail(LocalUser.email)
      .subscribe(response => {
        this.cliente = response;
+       this.getImageIfExist();
      },
      error => {});
 
    }
+  }
+
+  getImageIfExist(){
+    this.clienteService.getImageFromBucket(this.cliente.id)
+    .subscribe(response => {
+      this.cliente.imageUrl = `${API_CONFIG.bucketBaseUrl}/cp${this.cliente.id}.jpg`;
+    },
+    error =>{});
   }
 }

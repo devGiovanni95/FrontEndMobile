@@ -20,4 +20,10 @@ export class ClienteService{
       `${API_CONFIG.baseUrl}/clientes/email?value=${email}`,//nao estava aparecendo imagem pois estava com aspa en vez de acennto circunflexo
        {'headers': authHeader});
   }
+
+  getImageFromBucket(id : string): Observable<any>{
+      let url = `${API_CONFIG.bucketBaseUrl}/cp${id}.jpg`
+      return this.http.get(url, {responseType : 'blob'});
+  }
+
 }

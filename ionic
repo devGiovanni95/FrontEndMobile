@@ -1,0 +1,3 @@
+Checking Java JDK and Android SDK versions
+ANDROID_SDK_ROOT=undefined (recommended setting)
+ANDROID_HOME=C:\Users\geu_p\AppData\Local\Android\Sdk (DEPRECATED)

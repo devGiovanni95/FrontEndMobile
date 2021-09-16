@@ -10,37 +10,49 @@ import { AuthService } from '../../services/auth.service';
 })
 export class HomePage {
 
-  creds : CredenciaisDTO = {
+  creds: CredenciaisDTO = {
     email: "",
     senha: ""
   };
 
   constructor(
     public navCtrl: NavController,
-     public menu:MenuController,
-     public auth: AuthService) {
+    public menu: MenuController,
+    public auth: AuthService) {
 
   }
 
   //Quando for entrar na pagina  desabilitar menu lateral
-ionViewWillEnter(){
-  this.menu.swipeEnable(false);
-}
+  ionViewWillEnter() {
+    this.menu.swipeEnable(false);
+  }
 
-//quando sair da pagina habilita novamente o menu lateral
-ionViewDidLeave(){
-  this.menu.swipeEnable(true);
-}
+  //quando sair da pagina habilita novamente o menu lateral
+  ionViewDidLeave() {
+    this.menu.swipeEnable(true);
+  }
 
-  login(){
-    this.auth.authenticate(this.creds)
+  //
+  ionViewDidEnter() {
+    this.auth.refreshToken()
     .subscribe(response => {/*Subscrever para receber uma resposta*/
-     // console.log(response.headers.get('Authorization'));/*Se passar pela verificacao imprima a autorização*/
+      // console.log(response.headers.get('Authorization'));/*Se passar pela verificacao imprima a autorização*/
       this.auth.successfulLogin(response.headers.get('Authorization'));/*Se passar pela verificacao imprima a autorização*/
-    this.navCtrl.setRoot('CategoriasPage')/**Va para a proxima pasta sobrepondo */
+      this.navCtrl.setRoot('CategoriasPage')/**Va para a proxima pasta sobrepondo */
     },
-      error => {});/**se der erro nao faca nada */
-   // console.log(this.creds);
+      error => { });/**se der erro nao faca nada */
+  // console.log(this.creds);
+  }
+
+  login() {
+    this.auth.authenticate(this.creds)
+      .subscribe(response => {/*Subscrever para receber uma resposta*/
+        // console.log(response.headers.get('Authorization'));/*Se passar pela verificacao imprima a autorização*/
+        this.auth.successfulLogin(response.headers.get('Authorization'));/*Se passar pela verificacao imprima a autorização*/
+        this.navCtrl.setRoot('CategoriasPage')/**Va para a proxima pasta sobrepondo */
+      },
+        error => { });/**se der erro nao faca nada */
+    // console.log(this.creds);
   }
 
 }

@@ -24,10 +24,24 @@ export class AuthService{
       creds,
       {
         observe: `response`,/*Como vamos buscar no header- essa funcao vai especificar que uma requisicao do tipo respota*/
-        responseType: `text`/*Para nao tyentar fazer um parse no JSON e dar um erro*/
+        responseType: `text`/*Para nao tentar fazer um parse no JSON e dar um erro*/
       }
 
    )};
+
+   //Aproveitar o token pra ficar salvo o login enquanto o o token estiver ativo
+
+   refreshToken(){
+    return this.http.post(
+       `${API_CONFIG.baseUrl}/auth/refresh_token`,
+       {},
+       {
+         observe: `response`,/*Como vamos buscar no header- essa funcao vai especificar que uma requisicao do tipo respota*/
+         responseType: `text`/*Para nao tentar fazer um parse no JSON e dar um erro*/
+       }
+ 
+    )};
+
 
    /*Salvar o Login armazenando no localStorage*/
    successfulLogin(authorizationValue : string) {

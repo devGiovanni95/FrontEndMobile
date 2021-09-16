@@ -32,7 +32,7 @@ export class HomePage {
     this.menu.swipeEnable(true);
   }
 
-  //
+  //Fazendo o app reaproveitar o usuario com token valido
   ionViewDidEnter() {
     this.auth.refreshToken()
     .subscribe(response => {/*Subscrever para receber uma resposta*/

@@ -50,9 +50,12 @@ export class CategoriasPage {
         error => {
            // console.log(error); mostra o erro no console
            //---> delegar esta funcao para a classe de interceptador de errors
-        }
-        );
+        });
 
-        }
+      }
+
+      showProdutos(){
+        this.navCtrl.push('ProdutosPage');
+      }
 
 }

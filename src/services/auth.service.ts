@@ -1,3 +1,4 @@
+import { CartService } from './domain/cart.service';
 import { API_CONFIG } from './../config/api.config';
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
@@ -14,7 +15,9 @@ export class AuthService{
   jwtHelper: JwtHelper = new JwtHelper();
 
   // construtor para acessar uma requisição http
-  constructor(public http: HttpClient, public storage: StorageService){
+  constructor(public http: HttpClient,
+     public storage: StorageService,
+     public cartService: CartService){
 
   }
 
@@ -52,6 +55,7 @@ export class AuthService{
 
     };
     this.storage.setLocalUser(user);
+    this.cartService.createOrClearCart();//para limpar carrinho toda vez que uma pessoa fizer o login
 
    }
 

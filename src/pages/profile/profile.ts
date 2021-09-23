@@ -29,13 +29,14 @@ export class ProfilePage {
     public clienteService: ClienteService) {
   }
 
+//refatoramos para poder receber endereços pelo cadastro do cliente
   ionViewDidLoad() {
    let LocalUser = this.storage.getLocalUser();
    if(LocalUser && LocalUser.email){
      //this.email = LocalUser.email;
      this.clienteService.findByEmail(LocalUser.email)
      .subscribe(response => {
-       this.cliente = response;
+       this.cliente = response as ClienteDTO;//Declaramos como "as ClienteDTO" para que os dados case com a tipagem de ClienteDTO
        this.getImageIfExist();
      },
      error => {

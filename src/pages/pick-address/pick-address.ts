@@ -1,3 +1,5 @@
+import { ClienteService } from './../../services/domain/cliente.service';
+import { StorageService } from './../../services/storage.service';
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams } from 'ionic-angular';
 import { EnderecoDTO } from '../../models/endereco.dto';
@@ -18,11 +20,17 @@ export class PickAddressPage {
 
   items: EnderecoDTO[];
 
-  constructor(public navCtrl: NavController, public navParams: NavParams) {
+  constructor(public navCtrl: NavController,
+     public navParams: NavParams,
+     public storage: StorageService,
+     public clienteService: ClienteService) {
   }
 
   ionViewDidLoad() {
-    // console.log('ionViewDidLoad PickAddressPage');
+  
+    /* console.log('ionViewDidLoad PickAddressPage');
+        Dados mocados 
+
 
     this.items = [
       {
@@ -59,7 +67,24 @@ export class PickAddressPage {
           }
         }
 
-      }];
+      }];*/
+      
+      let LocalUser = this.storage.getLocalUser();
+        if(LocalUser && LocalUser.email){
+          //this.email = LocalUser.email;
+          this.clienteService.findByEmail(LocalUser.email)
+          .subscribe(response => {
+            this.items = response['enderecos'];//nao utilizamos o (cliente.enderecos) pois seria obrigatorio ter enderecos cadastrados utilizando [] nao é obrigatorio 
+          },
+          error => {
+            if(error.status == 403){
+              this.navCtrl.setRoot('HomePage');
+            }
+          });
+        }
+        else{
+         this.navCtrl.setRoot('HomePage');
+        }
   }
 
 }

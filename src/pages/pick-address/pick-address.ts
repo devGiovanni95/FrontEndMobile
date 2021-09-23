@@ -1,3 +1,5 @@
+import { CartService } from './../../services/domain/cart.service';
+import { PedidoDTO } from './../../models/pedido.dto';
 import { ClienteService } from './../../services/domain/cliente.service';
 import { StorageService } from './../../services/storage.service';
 import { Component } from '@angular/core';
@@ -19,15 +21,17 @@ import { EnderecoDTO } from '../../models/endereco.dto';
 export class PickAddressPage {
 
   items: EnderecoDTO[];
+  pedido: PedidoDTO;
 
   constructor(public navCtrl: NavController,
-     public navParams: NavParams,
-     public storage: StorageService,
-     public clienteService: ClienteService) {
+    public navParams: NavParams,
+    public storage: StorageService,
+    public clienteService: ClienteService,
+    public cartService: CartService) {
   }
 
   ionViewDidLoad() {
-  
+
     /* console.log('ionViewDidLoad PickAddressPage');
         Dados mocados 
 
@@ -68,23 +72,38 @@ export class PickAddressPage {
         }
 
       }];*/
-      
-      let LocalUser = this.storage.getLocalUser();
-        if(LocalUser && LocalUser.email){
-          //this.email = LocalUser.email;
-          this.clienteService.findByEmail(LocalUser.email)
-          .subscribe(response => {
-            this.items = response['enderecos'];//nao utilizamos o (cliente.enderecos) pois seria obrigatorio ter enderecos cadastrados utilizando [] nao é obrigatorio 
-          },
+
+    let LocalUser = this.storage.getLocalUser();
+    if (LocalUser && LocalUser.email) {
+      //this.email = LocalUser.email;
+      this.clienteService.findByEmail(LocalUser.email)
+        .subscribe(response => {
+          this.items = response['enderecos'];//nao utilizamos o (cliente.enderecos) pois seria obrigatorio ter enderecos cadastrados utilizando [] nao é obrigatorio 
+
+          let cart = this.cartService.getCart();
+
+          this.pedido = {
+            cliente: { id: response['id'] },
+            enderecoDeEntrega: null,
+            pagamento: null,
+            itens: cart.items.map(x => { return { quantidade: x.quantidade, produto: { id: x.produto.id } } }) //funcao que percorre o carrinho e mapeia os dados retornando somente a quantidade e o id do cliente utilizando lambda
+          }
+
+        },
           error => {
-            if(error.status == 403){
+            if (error.status == 403) {
               this.navCtrl.setRoot('HomePage');
             }
           });
-        }
-        else{
-         this.navCtrl.setRoot('HomePage');
-        }
+    }
+    else {
+      this.navCtrl.setRoot('HomePage');
+    }
+  }
+
+  nextPage(item: EnderecoDTO){
+    this.pedido.enderecoDeEntrega = item;
+    console.log(this.pedido)
   }
 
 }

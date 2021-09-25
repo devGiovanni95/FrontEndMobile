@@ -26,6 +26,7 @@ export class OrderConfirmationPage {
   cartItems: CartItem[];
   cliente: ClienteDTO;
   endereco: EnderecoDTO;
+  codPedido: string;
 
 
   constructor(
@@ -66,17 +67,26 @@ export class OrderConfirmationPage {
     this.navCtrl.setRoot('CartPage');
   }
 
+  home(){
+    this.navCtrl.setRoot('CategoriasPage');
+  }
+
 
   checkout(){
     this.pedidoService.insert(this.pedido)
       .subscribe(response => {
         this.cartService.createOrClearCart();//para limpar o carrinho
-        console.log(response.headers.get('location'));
+        this.codPedido = this.extractId(response.headers.get('location'));
       },
       error => {
         if(error.status == 403){
           this.navCtrl.setRoot('HomePage');
         }
       });
+  }
+
+  private extractId(location : string) : string {
+    let position = location.lastIndexOf('/');
+    return location.substring(position + 1, location.length);
   }
 }

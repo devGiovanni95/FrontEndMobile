@@ -11,6 +11,10 @@ export class ClienteService {
   constructor(public http: HttpClient, public storage: StorageService) {
   }
 
+   findById(id: string){
+     return this.http.get(`${API_CONFIG.baseUrl}/clientes/${id}`);
+  }
+
   //Refatoramos
   findByEmail(email: string){
     /* let token = this.storage.getLocalUser().token;

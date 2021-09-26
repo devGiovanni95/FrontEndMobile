@@ -22,11 +22,11 @@ export class CategoriasPage {
 
   items: CategoriaDTO[];
 
-    constructor(
-      public navCtrl: NavController,
-      public navParams: NavParams,
-      public CategoriaService: CategoriaService) {
-    }
+  constructor(
+    public navCtrl: NavController,
+    public navParams: NavParams,
+    public CategoriaService: CategoriaService) {
+  }
   /*
     ionViewDidLoad() {
         this.CategoriaService.findAll()
@@ -38,24 +38,35 @@ export class CategoriasPage {
       console.log(response);
     }*/
 
-    ionViewDidLoad() {
+  ionViewDidLoad() {
+    this.loadData();
+  }
+
+
+  loadData() {
       this.CategoriaService.findAll()
         .subscribe(
           //quando a requisicao da certo
           response => {
-        //  console.log(response);
-          this.items = response;
-        },
-        //quando a requisicao da algum erro
-        error => {
-           // console.log(error); mostra o erro no console
-           //---> delegar esta funcao para a classe de interceptador de errors
-        });
+            //  console.log(response);
+            this.items = response;
+          },
+          //quando a requisicao da algum erro
+          error => {
+            // console.log(error); mostra o erro no console
+            //---> delegar esta funcao para a classe de interceptador de errors
+          });
+    }
 
-      }
+  showProdutos(categoria_id: string) {
+    this.navCtrl.push('ProdutosPage', { cat_id: categoria_id });
+  }
 
-      showProdutos(categoria_id : string){
-        this.navCtrl.push('ProdutosPage',{cat_id: categoria_id});
-      }
+  doRefresh(refresher) {
+    this.loadData();
+    setTimeout(() => {
+      refresher.complete();
+    }, 1000);
+  }
 
 }

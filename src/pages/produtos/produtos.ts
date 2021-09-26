@@ -28,7 +28,10 @@ export class ProdutosPage {
   }
 
   ionViewDidLoad() {
-   // console.log('ionViewDidLoad ProdutosPage');
+    this.loadData();
+  }
+
+  loadData() {
 
     let categoria_id = this.navParams.get(`cat_id`);
     let loader = this.presentLoading();//chamando a janela de carregamento
@@ -38,25 +41,9 @@ export class ProdutosPage {
         loader.dismiss();//fechar janela  de carregamento quando vier a resposta da pagina
         this.loadImageUrls();
       },
-        error => { 
+        error => {
           loader.dismiss();//se der erro fechar a janela tambem
         });
-
-    /*   
-        this.items = [
-          {
-            id:"1",
-            nome: 'Mouse',
-            preco: 80.99
-          },
-    
-          {
-            id:"2",
-            nome: 'Teclado',
-            preco: 100.00
-          }
-    
-        ]*/
 
   }
 
@@ -67,21 +54,28 @@ export class ProdutosPage {
         .subscribe(response => {
           item.imageUrl = `${API_CONFIG.bucketBaseUrl}/prod${item.id}-small.jpg`;
         },
-          error => {});
+          error => { });
 
     }
   }
 
-  showDetail(produto_id: string){
-    this.navCtrl.push('ProdutoDetailPage',{produto_id: produto_id});
+  showDetail(produto_id: string) {
+    this.navCtrl.push('ProdutoDetailPage', { produto_id: produto_id });
   }
 
-  presentLoading(){
+  presentLoading() {
     let loader = this.loadingCtrl.create({
       content: "Please wait....",
-     // duration:3000
+      // duration:3000
     });
     loader.present();
     return loader;
+  }
+
+  doRefresh(refresher) {
+    this.loadData();
+    setTimeout(() => {
+      refresher.complete();
+    }, 1000);
   }
 }

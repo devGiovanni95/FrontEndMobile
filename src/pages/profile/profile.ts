@@ -28,25 +28,29 @@ export class ProfilePage {
     public camera: Camera) {
   }
 
+  loadData(){
+    let LocalUser = this.storage.getLocalUser();
+    if(LocalUser && LocalUser.email){
+      //this.email = LocalUser.email;
+      this.clienteService.findByEmail(LocalUser.email)
+      .subscribe(response => {
+        this.cliente = response as ClienteDTO;//Declaramos como "as ClienteDTO" para que os dados case com a tipagem de ClienteDTO
+        this.getImageIfExist();
+      },
+      error => {
+        if(error.status == 403){
+          this.navCtrl.setRoot('HomePage');
+        }
+      });
+    }/**Se caso na busca de usuarios por email dar errado ele voltar para home page */
+    else{
+     this.navCtrl.setRoot('HomePage');
+    }
+  }
+
 //refatoramos para poder receber endereços pelo cadastro do cliente
   ionViewDidLoad() {
-   let LocalUser = this.storage.getLocalUser();
-   if(LocalUser && LocalUser.email){
-     //this.email = LocalUser.email;
-     this.clienteService.findByEmail(LocalUser.email)
-     .subscribe(response => {
-       this.cliente = response as ClienteDTO;//Declaramos como "as ClienteDTO" para que os dados case com a tipagem de ClienteDTO
-       this.getImageIfExist();
-     },
-     error => {
-       if(error.status == 403){
-         this.navCtrl.setRoot('HomePage');
-       }
-     });
-   }/**Se caso na busca de usuarios por email dar errado ele voltar para home page */
-   else{
-    this.navCtrl.setRoot('HomePage');
-   }
+     this.loadData();
   }
 
   getImageIfExist(){
@@ -77,5 +81,20 @@ this.camera.getPicture(options).then((imageData) => {
 }, (err) => {
  // Handle error
 });
+  }
+
+  sendPicture(){
+    this.clienteService.uploadPicture(this.picture)
+    .subscribe(response => {
+      this.picture = null;
+      this.loadData();//recarregar a pagina
+    },
+    error => {
+
+    })
+  }
+
+  cancel(){
+    this.picture = null;
   }
 }

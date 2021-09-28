@@ -27,7 +27,6 @@
     "@ionic/pro": "2.0.4",
     "@ionic/storage": "2.2.0",
     "angular2-jwt": "^0.2.3",
-    "cordova-android": "9.1.0",
     "gradle": "^1.2.4",
     "ionic-angular": "3.9.9",
     "ionicons": "3.0.0",
@@ -61,8 +60,8 @@
       "cordova-plugin-camera": {}
     },
     "platforms": [
-      "android",
-      "browser"
+      "browser",
+      "android"
     ]
   }
 }
